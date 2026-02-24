@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ale.Editz · folder grid</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(145deg, #0f0f0f 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+        }
+        /* MAIN HERO CONTAINER */
+        
+        .hero {
+            max-width: 1400px;
+            width: 100%;
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 2.5rem;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 25px 40px -15px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        /* header with Ale.Editz */
+        
+        .hero-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 1.2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .hero-header h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(130deg, #ffffff 0%, #b0b0b0 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.03em;
+        }
+        
+        .folder-stats {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+        
+        .folder-stats i {
+            margin-right: 6px;
+            color: #3b82f6;
+        }
+        /* YOUTUBE-STYLE GRID - each box = one folder */
+        
+        .folders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-top: 1rem;
+        }
+        /* FOLDER CARD - exactly like YouTube video box */
+        
+        .folder-card {
+            background: rgba(24, 24, 24, 0.95);
+            border-radius: 1.2rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .folder-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 12px 18px -8px rgba(0, 0, 0, 0.6);
+        }
+        /* thumbnail container - like YouTube video thumbnail */
+        
+        .card-thumbnail {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #1c1c1c;
+            overflow: hidden;
+        }
+        
+        .card-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .folder-card:hover .card-thumbnail img {
+            transform: scale(1.05);
+        }
+        /* play button overlay (like YouTube hover) */
+        
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .folder-card:hover .play-overlay {
+            opacity: 1;
+        }
+        
+        .play-overlay i {
+            font-size: 3.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            filter: drop-shadow(0 4px 6px black);
+        }
+        /* folder duration/tag (like video duration) */
+        
+        .folder-tag {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .folder-tag i {
+            margin-right: 4px;
+            color: #3b82f6;
+        }
+        /* card details (like YouTube video info) */
+        
+        .card-details {
+            padding: 1rem;
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+        }
+        /* channel icon (folder icon) */
+        
+        .channel-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .channel-icon i {
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .card-text {
+            flex: 1;
+        }
+        
+        .card-text h3 {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        
+        .folder-path {
+            color: #aaa;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .folder-path i {
+            font-size: 0.7rem;
+            color: #3b82f6;
+        }
+        
+        .link-badge {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            display: inline-block;
+            margin-top: 0.3rem;
+        }
+        /* loading state */
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            font-size: 1.2rem;
+        }
+        
+        .loading i {
+            margin-right: 8px;
+            color: #3b82f6;
+        }
+        /* responsive */
+        
+        @media (max-width: 600px) {
+            .hero {
+                padding: 1.5rem;
+            }
+            .hero-header h1 {
+                font-size: 2.5rem;
+            }
+            .folders-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- hero container - JS will inject folder boxes -->
+    <div class="hero" id="hero">
+        <div class="hero-header">
+            <h1>Ale.Editz</h1>
+            <div class="folder-stats" id="folderStats">
+                <i class="fas fa-folder-tree"></i> <span id="folderCount">0</span> folders
+            </div>
+        </div>
+
+        <!-- grid container where JS adds folder boxes -->
+        <div class="folders-grid" id="foldersGrid">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Loading folders...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // FOLDER DATA - you can add as many folders as you want here
+        const foldersData = [{
+            name: "fishFarm07",
+            link: "https://fishfarm07-nejim.netlify.app/login/login.html",
+            thumbnail: "./imgs/fishfarm.png",
+            icon: "<fa-brands fa-internet-explorer",
+            category: "Web Platform"
+        }, {
+            name: "Camtrustglobal",
+            link: "https://camtrustglobal-nejim.netlify.app/login/login.html",
+            thumbnail: "./imgs/camtrustglobal.png",
+            icon: "fa-brands fa-internet-explorer",
+            category: "Web Platform"
+        }, {
+            name: "Typica",
+            link: "https://typica-nejib.netlify.app/login/login.html",
+            thumbnail: "./imgs/typica.png",
+            icon: "fa-brands fa-internet-explorer",
+            category: "Web Platform"
+        }, {
+            name: "Bean Drivin",
+            link: "https://bean-drivin-nejim.netlify.app/login/login.html",
+            thumbnail: "./imgs/beandrive.png",
+            icon: "fa-brands fa-internet-explorer",
+            category: "Web Platform"
+        }, {
+            name: "Apphilt",
+            link: "https://apphilt-nejim.netlify.app/login/login.html",
+            thumbnail: "./imgs/apphilt.png",
+            icon: "fa-brands fa-internet-explorer",
+            category: "Web Platform"
+        }, {
+            name: "Mamma-Miner",
+            link: "https://mama-miner-nejim.netlify.app/signin/signin.html",
+            thumbnail: "./imgs/maminer.png",
+            icon: "fa-brands fa-internet-explorer",
+            category: "Web Platform"
+        }, {
+            name: "Discord Server",
+            link: "https://discord.com",
+            thumbnail: "https://placehold.co/600x400/1e1e1e/5865F2?text=Discord+Folder",
+            icon: "fa-brands fa-internet-explorer",
+            category: "Web Platform"
+        }, {
+            name: "Reddit Communities",
+            link: "https://reddit.com",
+            thumbnail: "https://placehold.co/600x400/1e1e1e/FF4500?text=Reddit+Folder",
+            icon: "fa-brands fa-internet-explorer",
+            category: "Web Platform"
+        }];
+
+        // Function to create folder boxes
+        function createFolderBoxes() {
+            const grid = document.getElementById('foldersGrid');
+            const folderCountSpan = document.getElementById('folderCount');
+
+            // Clear loading and grid
+            grid.innerHTML = '';
+
+            // Update folder count
+            folderCountSpan.textContent = foldersData.length;
+
+            // Loop through folders and create boxes
+            foldersData.forEach((folder, index) => {
+                // Create folder card
+                const card = document.createElement('div');
+                card.className = 'folder-card';
+                card.setAttribute('data-link', folder.link);
+                card.setAttribute('data-folder-id', index);
+
+                // Add click event to open link
+                card.addEventListener('click', function(e) {
+                    const link = this.getAttribute('data-link');
+                    window.open(link, '_blank'); // opens in new tab
+                });
+
+                // Create card HTML structure
+                card.innerHTML = `
+                    <div class="card-thumbnail">
+                        <img src="${folder.thumbnail}" alt="${folder.name}">
+                        <div class="play-overlay">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <span class="folder-tag">
+                            <i class="fas fa-folder"></i> folder
+                        </span>
+                    </div>
+                    <div class="card-details">
+                        <div class="channel-icon">
+                            <i class="${folder.icon}"></i>
+                        </div>
+                        <div class="card-text">
+                            <h3>${folder.name}</h3>
+                            <div class="card-meta">
+                                <span class="folder-path">
+                                    <i class="fas fa-folder-open"></i> ${folder.category}
+                                </span>
+                                <span class="link-badge">
+                                    <i class="fas fa-link"></i> click to open
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Load folders when page loads
+        window.addEventListener('DOMContentLoaded', createFolderBoxes);
+    </script>
+</body>
+
+</html>
