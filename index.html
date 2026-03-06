@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ale.Editz · folder grid</title>
-    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -68,7 +67,7 @@
             margin-right: 6px;
             color: #3b82f6;
         }
-        /* YOUTUBE-STYLE GRID - each box = one folder */
+        /* YOUTUBE-STYLE GRID */
         
         .folders-grid {
             display: grid;
@@ -76,7 +75,6 @@
             gap: 1.8rem;
             margin-top: 1rem;
         }
-        /* FOLDER CARD - exactly like YouTube video box */
         
         .folder-card {
             background: rgba(24, 24, 24, 0.95);
@@ -93,7 +91,6 @@
             border-color: rgba(59, 130, 246, 0.4);
             box-shadow: 0 12px 18px -8px rgba(0, 0, 0, 0.6);
         }
-        /* thumbnail container - like YouTube video thumbnail */
         
         .card-thumbnail {
             position: relative;
@@ -113,7 +110,6 @@
         .folder-card:hover .card-thumbnail img {
             transform: scale(1.05);
         }
-        /* play button overlay (like YouTube hover) */
         
         .play-overlay {
             position: absolute;
@@ -138,7 +134,6 @@
             color: rgba(255, 255, 255, 0.9);
             filter: drop-shadow(0 4px 6px black);
         }
-        /* folder duration/tag (like video duration) */
         
         .folder-tag {
             position: absolute;
@@ -157,7 +152,6 @@
             margin-right: 4px;
             color: #3b82f6;
         }
-        /* card details (like YouTube video info) */
         
         .card-details {
             padding: 1rem;
@@ -165,7 +159,6 @@
             gap: 0.8rem;
             align-items: flex-start;
         }
-        /* channel icon (folder icon) */
         
         .channel-icon {
             width: 36px;
@@ -229,7 +222,6 @@
             display: inline-block;
             margin-top: 0.3rem;
         }
-        /* loading state */
         
         .loading {
             text-align: center;
@@ -242,7 +234,6 @@
             margin-right: 8px;
             color: #3b82f6;
         }
-        /* responsive */
         
         @media (max-width: 600px) {
             .hero {
@@ -259,7 +250,6 @@
 </head>
 
 <body>
-    <!-- hero container - JS will inject folder boxes -->
     <div class="hero" id="hero">
         <div class="hero-header">
             <h1>Ale.Editz</h1>
@@ -268,7 +258,6 @@
             </div>
         </div>
 
-        <!-- grid container where JS adds folder boxes -->
         <div class="folders-grid" id="foldersGrid">
             <div class="loading">
                 <i class="fas fa-spinner fa-spin"></i> Loading folders...
@@ -277,12 +266,11 @@
     </div>
 
     <script>
-        // FOLDER DATA - you can add as many folders as you want here
         const foldersData = [{
             name: "fishFarm07",
             link: "https://fishfarm07-nejim.netlify.app/login/login.html",
             thumbnail: "https://i.ibb.co/nN6Bbf0n/fishfarm.jpg",
-            icon: "<fa-brands fa-internet-explorer",
+            icon: "fa-brands fa-internet-explorer", // Removed leading <
             category: "Web Platform"
         }, {
             name: "Camtrustglobal",
@@ -383,41 +371,31 @@
         },{
             name: "Lyu Optics Beauty",
             link: "https://lyuopticsbeatuy-nejim.netlify.app/auth.html",
-            thumbnail: https://i.ibb.co/R4h3gHvR/lyuopticsbeatuy.jpg",
+            thumbnail: "https://i.ibb.co/R4h3gHvR/lyuopticsbeatuy.jpg", // Fixed missing quote
             icon: "fa-brands fa-internet-explorer",
             category: "Web Platform"
-        }
-        ];
+        }];
 
-        // Function to create folder boxes
         function createFolderBoxes() {
             const grid = document.getElementById('foldersGrid');
             const folderCountSpan = document.getElementById('folderCount');
 
-            // Clear loading and grid
-            grid.innerHTML = '';
+            if (!grid) return;
 
-            // Update folder count
+            grid.innerHTML = '';
             folderCountSpan.textContent = foldersData.length;
 
-            // Loop through folders and create boxes
             foldersData.forEach((folder, index) => {
-                // Create folder card
                 const card = document.createElement('div');
                 card.className = 'folder-card';
-                card.setAttribute('data-link', folder.link);
-                card.setAttribute('data-folder-id', index);
-
-                // Add click event to open link
-                card.addEventListener('click', function(e) {
-                    const link = this.getAttribute('data-link');
-                    window.open(link, '_blank'); // opens in new tab
+                
+                card.addEventListener('click', () => {
+                    window.open(folder.link, '_blank');
                 });
 
-                // Create card HTML structure
                 card.innerHTML = `
                     <div class="card-thumbnail">
-                        <img src="${folder.thumbnail}" alt="${folder.name}">
+                        <img src="${folder.thumbnail}" alt="${folder.name}" onerror="this.src='https://via.placeholder.com/400x225?text=Image+Not+Found'">
                         <div class="play-overlay">
                             <i class="fas fa-play-circle"></i>
                         </div>
@@ -442,13 +420,12 @@
                         </div>
                     </div>
                 `;
-
                 grid.appendChild(card);
             });
         }
 
-        // Load folders when page loads
-        window.addEventListener('DOMContentLoaded', createFolderBoxes);
+        // Initialize
+        document.addEventListener('DOMContentLoaded', createFolderBoxes);
     </script>
 </body>
 
